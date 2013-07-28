@@ -1,0 +1,94 @@
+/* Grid options */
+@gutter_width: 5px; // Your gutter width
+@columns: 12; // The amount of columns you want
+@max_width: 100%; // Set a maximum width of the site
+
+// Half the gutter for borders, margin, padding etc
+@gutter: @gutter_width * 0.5;
+
+@image-url: "/static/img";
+
+@import "commom.less";
+@import "widgets.less";
+@import "grid.less";
+@import "font-awesome.less";
+
+
+html {
+	-webkit-font-smoothing: antialiased;
+}
+
+body {
+	background-color: #e6e6e6;
+//	background-image: url('@{image-url}/background.gif');
+	color: #444;
+
+    font-size: 100%;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+}
+
+header {
+	font-family: Raleway;
+
+	&.fixed {
+		position: fixed;
+		top: 0;
+	}
+
+	h1 {
+		white-space: nowrap;
+		position: absolute; 
+		.transition(font-size 0.1s linear);
+		.transition(left 0.1s linear);
+		font-weight: 100;
+		font-size: 4.5em;
+		word-spacing: -0.3em;
+
+		&.active {
+			font-size: 2.5em;
+			margin-top: 0px;
+		}
+	}
+
+	span {
+		display: table;
+		margin: 0 auto;
+	}
+}
+
+section.social {
+	margin-top: 40px;
+	text-align: center;
+}
+
+li {
+	display: inline;
+	margin: 0 5px 0 5px;
+	a:hover {
+		text-decoration: underline;
+	}
+}
+
+ul.options {
+	margin: 0;
+	padding: 0;
+	display: inline;
+	position: absolute;
+	li {
+		margin: 0;
+		padding: 0;
+	}
+}
+.mask {
+	display: inline-block;
+	border: 1px solid transparent;
+	overflow: hidden;
+	position: relative;
+	vertical-align: -0.3em;
+//	padding-left: 2px;
+//	padding-right: 2px;
+	margin: 0 -3px;
+	.transition(all 0.3s linear);
+}
+@import "responsive.less";

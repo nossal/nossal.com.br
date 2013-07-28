@@ -1,0 +1,63 @@
+/**
+ * Grid
+ *
+ * Set up responsive grid system.
+ * 
+ * This is heavily infleuenced by the Semantic Grid http://semantic.gs
+ *
+ * @author Abban Dunne http://abandon.ie
+ * @author James Wilson http://jimmynotjim.com
+ * @version 1.1
+ */
+
+/* Utility variable — you should never need to modify this */
+@gridsystem_width: @columns * 1%;
+@padding: @gutter_width*0.5;
+@correction: 0.5 / @max_width * 100 * 1%; // NOTE: Check this in IE
+
+
+/* Our row container */
+.row(@padding:0) {
+	.clearfix();
+	.box-sizing('border-box');
+
+	//display: block;
+	max-width: @max_width;
+	margin: 0 auto;
+	padding: 0 @padding;
+	
+	letter-spacing: -0.31em; /* Webkit: collapse white-space between units */
+	*letter-spacing: normal; /* reset IE < 8 */
+	*word-spacing: -0.43em; /* IE < 8: collapse white-space between units */
+	text-rendering: optimizespeed; /* Webkit: fixes text-rendering: optimizeLegibility */
+	
+}
+
+/* Our column container */
+.column(@x, @padding:@padding, @columns:@columns) {
+	.box-sizing('border-box');
+    display: inline-block;
+    zoom: 1; *display: inline; /* IE < 8: fake inline-block */
+    letter-spacing: normal;
+    word-spacing: normal;
+    vertical-align: top;
+    text-rendering: auto;
+
+	//float: left;
+	width: 100%*(@x / @columns);
+	padding: 0 @padding;
+
+	//IE 6 & 7 Fix
+	*width: 100%*((@x / @gridsystem_width)-@correction);
+	*padding: 0 (@padding)-@correction;
+}
+
+/* Push adds left padding */
+.push(@offset:1, @columns:@columns) {
+	margin-left: 100%*(@offset / @columns);
+}
+
+/* Pull adds right padding */
+.pull(@offset:1, @columns:@columns) {
+	margin-right: 100%*(@offset / @columns);
+}

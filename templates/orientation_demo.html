@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Orientation Demo</title>
+	<style type="text/css" media="screen">
+	<!--
+	     .viewport {
+	         border: 1px solid #ccc;
+	         display: block;
+	         
+	         padding: 15px;
+	         width: 500px;
+	         margin-left: -250px;
+	         margin-top: -50px;
+	         
+	         position: fixed;
+             top: 50%;
+             left: 50%;
+	     }
+	     #obj {
+	         font-size: 40px;
+	         background: red;
+	         border: 1px solid #bc0000;
+	         color: #fff;
+	         text-align: center;
+	     }
+	-->
+	</style>
+</head>
+<body>
+    <div id="sts"></div>
+    <div class="viewport">
+        <div id="obj">Device  Orientation&nbsp;</div>
+    </div>
+
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    <!--
+    function onWebKitOrientation(event) {
+
+        var b = ((event.beta/180)*2 + 1);
+        //$('#sts').html(b);
+        var rotate = 'rotate(' + event.gamma + 'deg)';
+        var scale = 'scale(' + b + ')';
+        document.getElementById('obj').style.webkitTransform = rotate + ' ' + scale;
+    }
+
+    function onMozOrientation(event) {
+        var y = ((event.y/5)*2 + 1);
+        //$('#sts').html('y: '+ y);
+
+        var rotate = 'rotate(' + event.x*50 + 'deg)';
+        var scale = 'scale('+ y +')';
+        document.getElementById('obj').style.MozTransform = rotate + ' ' + scale;
+    }
+
+    if ($.browser.webkit) {
+        window.addEventListener('deviceorientation', onWebKitOrientation);
+    } else {
+        window.addEventListener('MozOrientation', onMozOrientation, true);
+    }
+    -->
+</script>
+</html>
