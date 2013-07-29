@@ -65,6 +65,7 @@ function getComputedUnit(element, attr) {
 window.addEventListener('scroll', onScroll, false);
 
 var h1 = document.querySelector('h1');
+var header = h1.parentNode.parentNode;
 var si = getComputedUnit(h1, 'marginTop');
 
 window.onresize = function() {
@@ -73,7 +74,7 @@ window.onresize = function() {
 	
 	var to = (bodySize / 2) - (h1Size / 2);
 	h1.style.left = to + 'px';
-	//move(h1, linear, to, 300);
+	//move(h1, bounceEaseOut, to, 300);
 }
 window.onresize();
 
@@ -81,26 +82,26 @@ var lastMargin = 0;
 
 function onScroll( event ) {
 	var top = (doc && doc.scrollTop || body && body.scrollTop || 0);
-	var cl = h1.parentNode.parentNode;
 	
 	if (top.scrollY > si || top > si) {
-		cl.className = 'fixed';
+		header.className = 'fixed';
 		h1.className = 'active';
 
 		h1.style.left = '0px';
+		header.style.height = getComputedUnit(h1, 'height') + 10 + 'px';
 
 	} else if (top.scrollY === 0 || top === 0) {
-		cl.className = '';
+		header.className = '';
 		h1.className = '';
 
 		window.onresize();
 	}
-	
-	var actualMargin = getComputedUnit(h1, 'height') + 20 + si + 'px';
+	var hs = getComputedUnit(header, 'height');
+	var actualMargin = ((hs === 0) ? getComputedUnit(h1, 'height') : hs) + 20 + si + 'px';
 	if (actualMargin !== lastMargin) {
-		(function(margin){
+		(function(margin) {
 			lastMargin = margin;
-			h1.parentNode.parentNode.nextElementSibling.style.marginTop = margin;
+			header.nextElementSibling.style.marginTop = margin;
 		})(actualMargin);
 	}
 }
