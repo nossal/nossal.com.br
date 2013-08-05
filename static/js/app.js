@@ -1,3 +1,6 @@
+var language = window.navigator.userLanguage || window.navigator.language;
+var lang = language.split('-')[0];
+
 function bounce(progress) {
 	for(var a = 0, b = 1, result; 1; a += b, b /= 2) {
 		if (progress >= (7 - 4 * a) / 11) {
@@ -6,7 +9,7 @@ function bounce(progress) {
 	}
 }
  
-function makeEaseOut(delta) { 
+function makeEaseOut(delta) {
 	return function(progress) {
 		return 1 - delta(1 - progress);
 	}
@@ -69,6 +72,8 @@ var header = h1.parentNode.parentNode;
 var si = getComputedUnit(h1, 'marginTop');
 
 window.onresize = function() {
+	if (h1.className === 'active')
+		return;
 	var bodySize = getComputedUnit(window.body, 'width');
 	var h1Size = getComputedUnit(h1, 'width');
 	
@@ -131,3 +136,125 @@ mask.parentNode.onmouseover = function() {
 mask.parentNode.onmouseout = function() {
 	adminTimer = setInterval(textAnim, 1200);
 }
+
+
+
+String.prototype.compile = function(data) {
+	var pattern, output, match;
+	
+	pattern = /(?:\{{2})([\w\[\]\.]+)(?:\}{2})/;
+	output = this;
+
+	
+	while (match = pattern.exec(output)) {
+		output = output.replace(match[0], '' + getValueFrom(match[1]));
+	}
+
+	function getValueFrom(varName) {
+		var varPath = varName.split('.');
+		var out = data;
+
+		for (var key in varPath) {
+			out = out[varPath[key]] || '';
+		}
+
+		return out;
+	}
+	
+	return output;
+}
+
+
+var JSONP = {
+	get: function(url, parameters, callback) {
+		(function (url, parameters, callback) {
+			var callbackName = parameters['callback'] = parameters['callback'] || 'JSONPcallback';
+			if (typeof parameters['callback'] === 'object') {
+				callbackName = parameters['callback'].name;
+				delete parameters['callback'];
+			}
+
+			var script = document.createElement('script');
+			script.id = 'fetcher'+ new Date().getTime();
+			script.src = buildUrl(url, parameters);
+		
+			document.head.appendChild(script);
+
+			function buildUrl(url, parameters) {
+				var params = [];
+		
+				for (var key in parameters) {
+					params.push(encodeURIComponent(key) +'='+ encodeURIComponent(parameters[key]));
+				}
+		
+				return url + (url.indexOf("?")+1 ? "&" : "?") + params.join("&");
+			}
+
+			window[callbackName] = function(response) {
+				callback(response);
+				document.head.removeChild(document.getElementById(script.id));
+				delete window[callbackName];
+			};
+		})(url, parameters, callback);
+	}
+};
+
+
+(function() {
+	var parameters = [], url;
+
+	parameters['access_token'] = '23477739.bbaf38a.176e8703006f4d1680d5db4dac7c09bb';
+	parameters['count'] = 14;
+	
+	url ='https://api.instagram.com/v1/users/23477739/media/recent';
+	
+	JSONP.get(url, parameters, function(response) {
+		var images = response.data, html = '', template;
+		
+		template = '<li><img src="{{images.thumbnail.url}}" width="150" height="150" title="{{caption.text}}"></li>';
+		
+		if (images instanceof Array) {
+			for (var key in images) {
+				html += template.compile(images[key]);
+			}
+		}
+		
+		document.getElementById('instaphotos').innerHTML = '<ul>'+ html +'</ul>';
+	});
+
+})();
+
+
+(function() {
+	var parameters, url;
+	
+	parameters = {
+		method: 'flickr.people.getPublicPhotos',
+		api_key: '6f38fb05774c34f1a33ee6f496d95404',
+		user_id: decodeURIComponent('12989699%40N00'),
+		per_page: 21,
+		format: 'json',
+		content_type: 1,
+		callback: {name: 'jsonFlickrApi', dontPass: true}
+	};
+
+	url = 'http://api.flickr.com/services/rest/';
+	
+	JSONP.get(url, parameters, function(response) {
+		var images = response.photos.photo, html = '', template;
+		
+		template = '<li><img src="{{url}}" width="150" height="150" title="{{caption}}"></li>';
+		
+		if (images instanceof Array) {
+			for (var key in images) {
+				var obj = {};
+				obj.caption = images[key].title;
+				obj.url = 'http://farm{{farm}}.staticflickr.com/{{server}}/{{id}}_{{secret}}_q.jpg'.compile(images[key]);
+
+				html += template.compile(obj);
+			}
+		}
+		
+		document.getElementById('flickrphotos').innerHTML = '<ul>'+ html +'</ul>';
+	});
+})();

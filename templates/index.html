@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block header %}  {% endblock %}
 {% block content %}
-	<header itemscope itemtype="http://data-vocabulary.org/Person">
-		<span class="name"><h1 itemprop="name">Rodrigo Nossal</h1></span>
-		<!--<p itemprop="title">Software Developer</p> -->
-	</header>
-	<section>
-	
-Olá, meu nome é Rodrigo, mas todos me chamam pelo meu sobrenome: Nossal. <br>E aqui na Internet é mais fácil me encontrar procurando meu sobrenome.
+<header itemscope itemtype="http://data-vocabulary.org/Person">
+	<span class="name"><h1 itemprop="name">Rodrigo Nossal</h1></span>
+	<!--<p itemprop="title">Software Developer</p> -->
+</header>
+
+<section id="me">
+	Olá, meu nome é Rodrigo, mas todos me chamam pelo meu sobrenome: Nossal. <br>E aqui na Internet é mais fácil me encontrar procurando meu sobrenome.
 	<a href="#">http://
 	<div class="mask">
 		<ul class="options">
@@ -24,47 +24,56 @@ Olá, meu nome é Rodrigo, mas todos me chamam pelo meu sobrenome: Nossal. <br>E
 			<li>slideshare.net</li>
 		</ul>
 	</div>
-	/nossal</a>	
+	/nossal</a>
 
-	</section>
+</section>
 
-	<section class="social">
-		<ul>
-			<li><a href="http://twitter.com/nossal">Twitter</a></li>
-			<li><a href="http://facebook.com/nossal">Facebook</a></li>
-			<li><a href="https://plus.google.com/u/0/105458817761425494589?rel=author">Google</a></li>
-			<li><a href="http://linkedin.com/in/nossal">LinkedIn</a></li>
-			<li><a href="https://coderwall.com/nossal">Coderwall</a></li>
-			<li><a href="http://github.com/nossal">GitHub</a></li>
-			<li><a href="http://instagram.com/nossal">Instagram</a></li>
-			<li><a href="http://flickr.com/photos/nossal">Flickr</a></li>
-			<li><a href="http://last.fm/user/nossal">Last.fm</a></li>
-			<li><a href="http://soundcloud.com/nossal">Soundcloud</a></li>
-			<li><a href="http://about.me/nossal">About.me</a></li>
-			<li><a href="http://dinher.in">Dinherin</a></li>
-			<li><a href="http://slideshare.net/nossal">SlideShare</a></li>
-		</ul>
-	</section>
-	<section>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-	</section>
+<section id="social">
+	<h2>Social</h2>
+	<ul>
+		<li><a href="http://twitter.com/nossal" class="symbol" title="twitter">twitterbird</a></li>
+		<li><a href="http://facebook.com/nossal" class="symbol" title="facebook">facebook</a></li>
+		<li><a href="https://plus.google.com/u/0/105458817761425494589?rel=author" class="symbol" title="googleplus">googleplus</a></li>
+		<li><a href="http://linkedin.com/in/nossal" class="symbol" title="linkedin">linkedin</a></li>
 
-	<footer><span class="made">Handmade without jQuery in Grav.</span></footer>
+		<li><a href="http://github.com/nossal" class="symbol" title="github">githubalt</a></li>
+		<li><a href="http://instagram.com/nossal" class="symbol" title="instagram">instagram</a></li>
+		<li><a href="http://flickr.com/photos/nossal" class="symbol" title="flickr">flickr</a></li>
+		<li><a href="http://last.fm/user/nossal" class="symbol" title="lastfm">lastfm</a></li>
+		<li><a href="http://soundcloud.com/nossal" class="symbol" title="soundcloud">soundcloud</a></li>
+		<li><a href="http://about.me/nossal"class="symbol" title="aboutme">aboutme</a></li>
+		
+		<li><a href="http://slideshare.net/nossal" class="symbol" title="slideshare">slideshare</a></li>
+		<li><a href="https://coderwall.com/nossal" class="symbol" title="coderwall">C</a></li>
+	</ul>
+	<a href="http://dinher.in">Dinherin</a>
+	
+</section>
+
+<section id="contact">
+	<h2>Contato</h2>
+	<form>
+		<h2>Vamos conversar!</h2>
+		<input type="email" name="email" />
+		<textarea name="message" rows="5"></textarea>
+		<input type="submit" value="Enviar Mensagem" />
+	</form>
+</section>
+
+<section id="resume">
+	
+</section>
+
+<section>
+	<h2>Fotos</h2>
+	<div id="instaphotos" class="gallery"></div>
+	<div id="flickrphotos" class="gallery"></div>
+</section>
+
+<section id="end">
+	<div class="end">Fim.</div>
+</section>
+<footer>
+	<span class="made">Handmade without jQuery in <a href="//pt.wikipedia.org/wiki/Gravata%C3%AD">Grav.</a></span>
+</footer>
 {% endblock %}

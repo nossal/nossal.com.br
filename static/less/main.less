@@ -11,7 +11,35 @@
 @import "commom.less";
 @import "widgets.less";
 @import "grid.less";
-@import "font-awesome.less";
+
+@FontPath:   "../fonts";
+
+@font-face {
+	font-family: 'Mono Social Icons Font';
+	src: url('@{FontPath}/MonoSocialIconsFont-1.10.eot');
+	src: url('@{FontPath}/MonoSocialIconsFont-1.10.eot?#iefix') format('embedded-opentype'),
+	     url('@{FontPath}/MonoSocialIconsFont-1.10.woff') format('woff'),
+	     url('@{FontPath}/MonoSocialIconsFont-1.10.ttf') format('truetype'),
+	     url('@{FontPath}/MonoSocialIconsFont-1.10.svg#MonoSocialIconsFont') format('svg');
+
+	src: url('@{FontPath}/MonoSocialIconsFont-1.10.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.symbol, a.symbol:before {
+	font-family: 'Mono Social Icons Font';
+	-webkit-text-rendering: optimizeLegibility;
+	-moz-text-rendering: optimizeLegibility;
+	-ms-text-rendering: optimizeLegibility;
+	-o-text-rendering: optimizeLegibility;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-ms-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+}
 
 
 html {
@@ -30,8 +58,9 @@ body {
 	
     margin-bottom: 50px;
     padding-top: 1px;
+	font-weight: 100;
 
-    box-shadow: 0px 5px 40px #222;
+    box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.55);
 }
 
 header {
@@ -42,6 +71,7 @@ header {
 	position: relative;
 	
 	&.fixed {
+		box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 		position: fixed;
 		top: 0;
 	}
@@ -49,15 +79,16 @@ header {
 	h1 {
 		white-space: nowrap;
 		position: absolute;
-		.transition(font-size 0.1s linear);
-		.transition(left 0.1s linear);
+		.transition(font-size 0.15s linear);
+		.transition(left 0.15s linear);
 		font-weight: 100;
 		font-size: 4.5em;
 		word-spacing: -0.3em;
 
 		&.active {
 			font-size: 2.5em;
-			margin-top: 0px;
+			margin: 0.1em;
+			margin-left: 0.3em;
 		}
 	}
 
@@ -67,9 +98,108 @@ header {
 	}
 }
 
-section.social {
-	margin-top: 40px;
-	text-align: center;
+section {
+	padding: 2em;
+	margin: 1em;
+	h2 {
+		text-align: center;
+	}
+	&#me {
+		line-height: 1.4em;
+	}
+	&#social {
+		margin-top: 40px;
+		text-align: center;
+		
+		li {
+			display: inline-block;
+			font-size: 8em;
+			margin: 0;
+			padding: 0;
+			width: 20%;
+		
+			a {
+				color: #000;
+				&:hover {
+					text-decoration: none;
+				}
+			}
+		
+		}
+	}
+	
+	&#contact {
+		background-color: #395c9e;
+		color: #fff;
+		
+		form {
+			font-family: Raleway;
+			
+			margin: auto;
+			display: table;
+			
+			h2 {
+				text-transform: uppercase;
+			}
+			
+			input[type=text], input[type=email], textarea {
+				display: block;
+				margin: 0.2em;
+				padding: 0.1em;
+				padding-left: 0.5em;
+				width: 15em;
+				font-size: 1.4em;
+				border-radius: 3px;
+				
+				border: 1px solid #000;
+			}
+			input[type=submit] {
+				margin-right: 0.4em;
+				float: right;
+			}
+		}
+	}	
+}
+
+.gallery {
+	width: 5*150px;
+	margin: auto;
+	position: relative;
+	border: 0.4em solid #fff;
+	margin-top: 0.4em;
+	background-color: #444;
+	
+	&:after {
+		box-shadow: inset 0 0 10em rgba(0, 0, 0, 0.7);
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 2;
+		content: "";
+	}
+
+	ul {
+		li {
+			float: left;
+			display: block;
+			margin: 0;
+			height: 150px;
+			z-index: 100;
+		}
+		.clearfix();
+	}
+}
+
+.end {
+	margin: 1em auto 1em auto;
+	display: table;
+	font-size: 4em;
+	font-family: 'Alex Brush';
+	color: darken(#e6e6e6, 5%);
+	text-shadow: 1px 1px rgba(255,255,255,0.5), -1px -1px rgba(0,0,0,0.3);
+	
 }
 
 footer {
@@ -113,4 +243,5 @@ ul.options {
 	margin: 0 -3px;
 	.transition(all 0.3s linear);
 }
+
 @import "responsive.less";

@@ -19,20 +19,25 @@ class Webmaster(webapp.RequestHandler):
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
-		self.response.out.write(template('index').render())
+		headers = self.request.headers
+		print headers['Accept-Language']
+		self.response.out.write(template('index').render({'lang': headers['Accept-Language']}))
 
 
 class StaticHandler(webapp.RequestHandler):
 	def get(self, file):
+		
+		headers = self.request.headers
+		print headers['Accept-Language']
+		
 		try:
 			tpl = template(file)
 		except:
 			self.error(404)
 			tpl = template('not_found')
 
-		self.response.out.write(tpl.render({'page': file}))
-
-
+		self.response.out.write(tpl.render({'page': file, 'lang': headers['Accept-Language']}))
+	
 app = webapp.WSGIApplication([
     ('/', MainHandler),
 	('/(.+)', StaticHandler),
