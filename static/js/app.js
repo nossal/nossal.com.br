@@ -67,13 +67,14 @@ function getComputedUnit(element, attr) {
 
 window.addEventListener('scroll', onScroll, false);
 
-var h1 = document.querySelector('h1');
-var header = h1.parentNode.parentNode;
-var si = getComputedUnit(h1, 'marginTop');
+var h1 = document.getElementsByTagName('h1')[0];
+var header = document.getElementsByTagName('header')[0];
+var marginTop = getComputedUnit(h1, 'marginTop');
 
 window.onresize = function() {
 	if (h1.className === 'active')
 		return;
+
 	var bodySize = getComputedUnit(window.body, 'width');
 	var h1Size = getComputedUnit(h1, 'width');
 	
@@ -83,34 +84,34 @@ window.onresize = function() {
 }
 window.onresize();
 
-var lastMargin = 0;
+
+header.nextElementSibling.style.marginTop = absHeight(h1) + 'px';
+
+function absHeight(element) {
+	return getComputedUnit(h1, 'height') + getComputedUnit(h1, 'marginTop') * 2;
+}
 
 function onScroll( event ) {
 	var top = (doc && doc.scrollTop || body && body.scrollTop || 0);
 	
-	if (top.scrollY > si || top > si) {
+	if (top.scrollY > marginTop || top > marginTop) {
+		if (h1.className === 'active')
+			return;
+			
 		header.className = 'fixed';
 		h1.className = 'active';
-
-		h1.style.left = '0px';
-		header.style.height = getComputedUnit(h1, 'height') + 10 + 'px';
+		h1.style.left = '0';
+		
+		header.style.height = absHeight(h1) + 'px';
 
 	} else if (top.scrollY === 0 || top === 0) {
 		header.className = '';
+		header.style.height = 0;
 		h1.className = '';
-
+		
 		window.onresize();
 	}
-	var hs = getComputedUnit(header, 'height');
-	var actualMargin = ((hs === 0) ? getComputedUnit(h1, 'height') : hs) + 20 + si + 'px';
-	if (actualMargin !== lastMargin) {
-		(function(margin) {
-			lastMargin = margin;
-			header.nextElementSibling.style.marginTop = margin;
-		})(actualMargin);
-	}
 }
-onScroll();
 
 
 var opts = document.querySelectorAll('ul.options li');
@@ -168,7 +169,7 @@ String.prototype.compile = function(data) {
 var JSONP = {
 	get: function(url, parameters, callback) {
 		(function (url, parameters, callback) {
-			var callbackName = parameters['callback'] = parameters['callback'] || 'JSONPcallback';
+			var callbackName = parameters['callback'] = parameters['callback'] || 'JSONPcallback'+ new Date().getTime();
 			if (typeof parameters['callback'] === 'object') {
 				callbackName = parameters['callback'].name;
 				delete parameters['callback'];
@@ -209,17 +210,19 @@ var JSONP = {
 	url ='https://api.instagram.com/v1/users/23477739/media/recent';
 	
 	JSONP.get(url, parameters, function(response) {
-		var images = response.data, html = '', template;
+		var images = response.data, html = [], template;
 		
 		template = '<li><img src="{{images.thumbnail.url}}" width="150" height="150" title="{{caption.text}}"></li>';
+		html.push('<ul>');
 		
 		if (images instanceof Array) {
 			for (var key in images) {
-				html += template.compile(images[key]);
+				html.push(template.compile(images[key]));
 			}
 		}
+		html.push('</ul>');
 		
-		document.getElementById('instaphotos').innerHTML = '<ul>'+ html +'</ul>';
+		document.getElementById('instaphotos').innerHTML = html.join('');
 	});
 
 })();
@@ -241,9 +244,10 @@ var JSONP = {
 	url = 'http://api.flickr.com/services/rest/';
 	
 	JSONP.get(url, parameters, function(response) {
-		var images = response.photos.photo, html = '', template;
+		var images = response.photos.photo, html = [], template;
 		
 		template = '<li><img src="{{url}}" width="150" height="150" title="{{caption}}"></li>';
+		html.push('<ul>');
 		
 		if (images instanceof Array) {
 			for (var key in images) {
@@ -251,10 +255,37 @@ var JSONP = {
 				obj.caption = images[key].title;
 				obj.url = 'http://farm{{farm}}.staticflickr.com/{{server}}/{{id}}_{{secret}}_q.jpg'.compile(images[key]);
 
-				html += template.compile(obj);
+				html.push(template.compile(obj));
 			}
 		}
+		html.push('</ul>');
 		
-		document.getElementById('flickrphotos').innerHTML = '<ul>'+ html +'</ul>';
+		document.getElementById('flickrphotos').innerHTML = html.join('');
+	});
+})();
+
+
+(function(){
+	var parameters, url;
+	
+	parameters = {
+		access_token: 'CAABtKBQvWooBANH7owIp0ZClAA263QyIE9kHCj23tQAHMYrhXqZCuf6uAxkb4myXuCKyF7Qt8oPdL03VYz3YHqZCqRO8qy2MbsvxvEvlTPdPxylhgpZAZASNzs2ZBWZAVAcZBuN5ydFbVu7SmWhYOiU4tQBCDs3j20o634m0k8QPdgZDZD',
+		method: 'GET'
+	};
+
+	url = 'https://graph.facebook.com/me/og.likes';
+	
+	JSONP.get(url, parameters, function(response) {
+		var html = [], template, likes = response.data;
+		
+		template = '<li><img src="https://graph.facebook.com/{{application.id}}/picture" width="75" height="75" title="{{application.name}}"></li>';
+		html.push('<ul>');
+		
+		for (var key in likes) {
+			html.push(template.compile(likes[key]));
+		}
+		html.push('</ul>');
+		
+		document.getElementById('facebook').innerHTML = html.join('');
 	});
 })();
