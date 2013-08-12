@@ -92,6 +92,6 @@ class LastTweet(webapp.RequestHandler):
 
 app = webapp.WSGIApplication([
 	('/api/mylasttweet', LastTweet),
-    ('/', MainHandler),
+	('/', MainHandler),
 	('/(.+)', StaticHandler)
 ], debug=True)
