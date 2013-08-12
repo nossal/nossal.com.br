@@ -16,6 +16,7 @@ function makeEaseOut(delta) {
 }
  
 var bounceEaseOut = makeEaseOut(bounce);
+var easeOut = makeEaseOut(linear);
 
 function linear(progress) {
 	return progress;
@@ -33,6 +34,7 @@ function animate(opts) {
      
 		var delta = opts.delta(progress);
 		opts.step(delta);
+		
      
 		if (progress == 1) {
 			clearInterval(id);
@@ -70,6 +72,8 @@ window.addEventListener('scroll', onScroll, false);
 var h1 = document.getElementsByTagName('h1')[0];
 var header = document.getElementsByTagName('header')[0];
 var marginTop = getComputedUnit(h1, 'marginTop');
+var nextToHeader = header.nextElementSibling;
+var start = document.querySelectorAll('a.start')[0];
 
 window.onresize = function() {
 	if (h1.className === 'active')
@@ -81,17 +85,17 @@ window.onresize = function() {
 	var to = (bodySize / 2) - (h1Size / 2);
 	h1.style.left = to + 'px';
 	//move(h1, bounceEaseOut, to, 300);
+	
+	nextToHeader.style.height = window.innerHeight - absHeight(h1)*1.5 + 'px';
+	nextToHeader.style.marginTop = absHeight(h1) + 'px';
 }
 window.onresize();
-
-
-header.nextElementSibling.style.marginTop = absHeight(h1) + 'px';
 
 function absHeight(element) {
 	return getComputedUnit(h1, 'height') + getComputedUnit(h1, 'marginTop') * 2;
 }
 
-function onScroll( event ) {
+function onScroll(event) {
 	var top = (doc && doc.scrollTop || body && body.scrollTop || 0);
 	
 	if (top.scrollY > marginTop || top > marginTop) {
@@ -100,7 +104,9 @@ function onScroll( event ) {
 			
 		header.className = 'fixed';
 		h1.className = 'active';
-		h1.style.left = '0';
+		h1.style.left = 0;
+		
+		start.style.display = 'none';
 		
 		header.style.height = absHeight(h1) + 'px';
 
@@ -108,36 +114,65 @@ function onScroll( event ) {
 		header.className = '';
 		header.style.height = 0;
 		h1.className = '';
+
+		start.style.display = 'block';
 		
 		window.onresize();
 	}
 }
 
 
+function scrollToElement(element) {
+	var to = element.offsetTop - 55;
+	var start = new Date;
+ 	console.info(to)
+	var id = setInterval(function() {
+		var timePassed = new Date - start;
+		var progress = timePassed*3 / to;
+ 	   
+		if (progress > 1) progress = 1;
+     
+		var delta = easeOut(progress);
+		
+		window.scrollTo(0, delta*to);
+     
+		if (progress == 1) {
+			clearInterval(id);
+		}
+	}, 5);
+}
+
+start.onclick = function (e) {
+	e.preventDefault();
+	scrollToElement(nextToHeader.nextElementSibling);
+};
+
+
+/*
 var opts = document.querySelectorAll('ul.options li');
 var opt = document.querySelector('ul.options');
 var mask = document.querySelector('.mask');
 mask.style.width = opts[0].offsetWidth + 'px';
-mask.style.height = opts[0].offsetHeight + 'px';
+mask.style.height = opts[0].offsetHeight + 'px'; //.getComputedUnit(opts[0], 'lineHeight') + 'px';
 
 var i = 0;
-var adminTimer = setInterval(textAnim, 1200);
+//var aminTimer = setInterval(textAnim, 1200);
 
 function textAnim() {
 	mask.style.width = opts[i].offsetWidth + 'px';
 	opt.style.top = '-'+ i * opts[0].offsetHeight + 'px';
 	
-	mask.parentNode.href = 'http://'+ opts[i].innerText + '/nossal';
+	mask.parentNode.href = '//'+ opts[i].innerText + '/nossal';
 	i = (i < opts.length -1) ? i+1 : 0;
 }
 
 mask.parentNode.onmouseover = function() {
-	clearInterval(adminTimer);
+	clearInterval(aminTimer);
 }
 mask.parentNode.onmouseout = function() {
-	adminTimer = setInterval(textAnim, 1200);
+	adinTimer = setInterval(textAnim, 1200);
 }
-
+*/
 
 
 String.prototype.compile = function(data) {
@@ -145,7 +180,6 @@ String.prototype.compile = function(data) {
 	
 	pattern = /(?:\{{2})([\w\[\]\.]+)(?:\}{2})/;
 	output = this;
-
 	
 	while (match = pattern.exec(output)) {
 		output = output.replace(match[0], '' + getValueFrom(match[1]));
@@ -169,7 +203,7 @@ String.prototype.compile = function(data) {
 var JSONP = {
 	get: function(url, parameters, callback) {
 		(function (url, parameters, callback) {
-			var callbackName = parameters['callback'] = parameters['callback'] || 'JSONPcallback'+ new Date().getTime();
+			var callbackName = parameters['callback'] = parameters['callback'] || 'JSONPCallback'+ new Date().getTime();
 			if (typeof parameters['callback'] === 'object') {
 				callbackName = parameters['callback'].name;
 				delete parameters['callback'];
@@ -178,7 +212,7 @@ var JSONP = {
 			var script = document.createElement('script');
 			script.id = 'fetcher'+ new Date().getTime();
 			script.src = buildUrl(url, parameters);
-		
+			script.async = 'async';
 			document.head.appendChild(script);
 
 			function buildUrl(url, parameters) {
@@ -188,7 +222,7 @@ var JSONP = {
 					params.push(encodeURIComponent(key) +'='+ encodeURIComponent(parameters[key]));
 				}
 		
-				return url + (url.indexOf("?")+1 ? "&" : "?") + params.join("&");
+				return url + (url.indexOf('?')+1 ? '&' : '?') + params.join('&');
 			}
 
 			window[callbackName] = function(response) {
@@ -199,7 +233,6 @@ var JSONP = {
 		})(url, parameters, callback);
 	}
 };
-
 
 (function() {
 	var parameters = [], url;
@@ -241,7 +274,7 @@ var JSONP = {
 		callback: {name: 'jsonFlickrApi', dontPass: true}
 	};
 
-	url = 'http://api.flickr.com/services/rest/';
+	url = '//api.flickr.com/services/rest/';
 	
 	JSONP.get(url, parameters, function(response) {
 		var images = response.photos.photo, html = [], template;
@@ -253,7 +286,7 @@ var JSONP = {
 			for (var key in images) {
 				var obj = {};
 				obj.caption = images[key].title;
-				obj.url = 'http://farm{{farm}}.staticflickr.com/{{server}}/{{id}}_{{secret}}_q.jpg'.compile(images[key]);
+				obj.url = '//farm{{farm}}.staticflickr.com/{{server}}/{{id}}_{{secret}}_q.jpg'.compile(images[key]);
 
 				html.push(template.compile(obj));
 			}
@@ -264,12 +297,31 @@ var JSONP = {
 	});
 })();
 
+(function() {
+	JSONP.get('/api/mylasttweet', [], function(tweet) {
+
+		tweet.date = new Date(tweet.created_at).toLocaleString();
+		//tweet.text = 'asd sd asdasda sdas dasdasdas adsdas asd sdasd asd asdasd asdasd asda sdasdasdasd asd asdas das asasd sadsdasd asdas das adasda asd asdasda';
+
+		template = '<div class="ico"> \
+						<span class="symbol">twitterbird</span> \
+					</div> \
+					<div class="text"> \
+						<a href="//twitter.com/nossal"> \
+							<span>@nossal</span><p id="tweettext">{{text}}</p> \
+						</a> \
+					</div> \
+					<div class="status"><span>{{client}}</span><span>{{date}}</span></div>';
+		
+		document.getElementById('tweetwidget').innerHTML = template.compile(tweet);
+	});
+})();
 
 (function(){
 	var parameters, url;
 	
 	parameters = {
-		access_token: 'CAABtKBQvWooBANH7owIp0ZClAA263QyIE9kHCj23tQAHMYrhXqZCuf6uAxkb4myXuCKyF7Qt8oPdL03VYz3YHqZCqRO8qy2MbsvxvEvlTPdPxylhgpZAZASNzs2ZBWZAVAcZBuN5ydFbVu7SmWhYOiU4tQBCDs3j20o634m0k8QPdgZDZD',
+		access_token: 'CAABtKBQvWooBAN9zxaM006wu6J1uDrcAkLpcFDZBiUAODZCVFOUgnZAdyv6Srxo4w9wQ8CwEfhZAgm2NhD83XLlrLrFe6iDXV3g9gKm9r1HGZBLXVoEMIVCh4sZA5sse2kKE5txpk9gU1h61P2HQnpUlZCZCkYN2ns3nxILSZC0d0RgZDZD',
 		method: 'GET'
 	};
 
@@ -288,4 +340,4 @@ var JSONP = {
 		
 		document.getElementById('facebook').innerHTML = html.join('');
 	});
-})();
+});

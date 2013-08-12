@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% block header %}  {% endblock %}
 {% block content %}
 <header itemscope itemtype="http://data-vocabulary.org/Person">
 	<span class="name"><h1 itemprop="name">Rodrigo Nossal</h1></span>
@@ -7,28 +6,25 @@
 </header>
 
 <section id="me">
-	<p>Olá, meu nome é Rodrigo, mas todos me chamam pelo meu sobrenome: Nossal. <br>E aqui na Internet é mais fácil me encontrar procurando meu sobrenome.</p>
+	<p>Olá, meu nome é Rodrigo, mas todos me chamam pelo meu sobrenome: Nossal. <br>E aqui na Internet você também pode me encontrar em: <span id="widget"><a href="#" target="blank">http://<span class="mask"></span>/nossal</a></span></p>
 	
-	<p>Sou desenvolvedor de software da região de Porto Alegre. Atualmente trabalho no <a href="//terra.com.br" class="orangeco" target="blank">Terra Networks</a>. Lá eu atualmente programo em Java (Struts, Spring), Python (Django, Flask) e JavaScript (jQuery, Backbone, Node, etc.), mas já trabalhei com PHP e até PL/SQL em outros tempos. Sim meu foco é o desenvolvimento Web, por isso me dou muito bem com aspectos que vão desde a instação e configuração de servidores ao HTML e CSS das páginas.
-</p>
-	<a href="#">http://
-	<div class="mask">
-		<ul class="options">
-			<li>twitter.com</li>
-			<li>facebook.com</li>
-			<li>linkedin.com/in</li>
-			<li>coderwall.com</li>
-			<li>github.com</li>
-			<li>instagram.com</li>
-			<li>flickr.com/photos</li>
-			<li>last.fm/user</li>
-			<li>soundcloud.com</li>
-			<li>about.me</li>
-			<li>slideshare.net</li>
-		</ul>
-	</div>
-	/nossal</a>
+	<div id="tweetwidget"></div>
 
+	<a href='#' class="start">
+		<svg width="60" height="30" xmlns="http://www.w3.org/2000/svg">
+		  <g id="svg_1">
+		      <line y2="24" x2="30" y1="5" x1="4" stroke-linecap="round" stroke-width="8"/>
+		      <line y2="24" x2="30" y1="5" x1="56" stroke-linecap="round" stroke-width="8"/>
+		  </g>
+		</svg>
+	</a>
+</section>
+
+<section>
+	<p>Sou desenvolvedor de software da região de Porto Alegre. Atualmente trabalho no <a href="//terra.com.br" class="orangeco" target="blank">Terra Networks</a>. Lá eu atualmente programo em Java (Struts, Spring), Python (Django, Flask) e JavaScript (jQuery, Backbone, Node, etc.), mas já trabalhei com PHP e até PL/SQL em outros tempos. Sim, meu foco agora é o desenvolvimento Web, por isso me dou muito bem com aspectos que vão desde a instação e configuração de servidores ao HTML e CSS das páginas. Mas ando muito empolgado com Objective-C e desenvolvimento Mobile.</p>
+
+
+	
 </section>
 
 <section id="social">
@@ -50,8 +46,7 @@
 		<li><a href="https://coderwall.com/nossal" class="symbol" title="coderwall">C</a></li>
 	</ul>
 	<a href="http://dinher.in">Dinherin</a>
-	
-	<div id="facebook" class="gallery"></div>
+
 </section>
 
 <section>
@@ -60,6 +55,10 @@
 	<div id="flickrphotos" class="gallery"></div>
 </section>
 <section id="resume">
+	
+</section>
+<section id="greatref">
+	<h2>Grande referência das coisas que já usei e ainda uso</h2>
 	
 </section>
 <section id="contact">
