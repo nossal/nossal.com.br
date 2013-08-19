@@ -7,6 +7,7 @@ import webapp2 as webapp
 import urllib2, base64, json
 import jinja2
 import os
+import short
 
 JINJA_ENVIRONMENT = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates/')))
 
@@ -23,21 +24,31 @@ class OauthCredentials(db.Model):
 class MainHandler(webapp.RequestHandler):
     def get(self):
 		headers = self.request.headers
-		print headers['Accept-Language']
+		#print headers['Accept-Language']
 		self.response.out.write(template('index').render({'lang': headers['Accept-Language']}))
 
 
 class StaticHandler(webapp.RequestHandler):
 	def get(self, file):
-		
 		headers = self.request.headers
 		print headers['Accept-Language']
 		
 		try:
 			tpl = template(file)
 		except:
-			self.error(404)
-			tpl = template('not_found')
+			info = {
+				'referer': self.request.referer,
+				'ip_address': self.request.remote_addr,
+				'user_agent': self.request.headers['user-agent']
+			}
+			url = short.get_url(file, info)
+			
+			if url is not None:
+				self.redirect(url)
+				return
+			else:
+				self.error(404)
+				tpl = template('not_found')
 
 		self.response.out.write(tpl.render({'page': file, 'lang': headers['Accept-Language']}))
 
@@ -45,13 +56,17 @@ class LastTweet(webapp.RequestHandler):
 	def get(self):
 		callback_name = self.request.get("callback")
 
+		tweet_json = '%s({\'error\': \'error\'})' % (callback_name)
+		
 		tweet = memcache.get('cache:tweet')
+
 		if tweet is None:
 			tweet = self.get_tweet(callback_name)
 			if tweet is not None:
 				memcache.add('cache:tweet', tweet, 60*60*12)
 
-		tweet_json = '%s({\'text\': \'%s\', \'client\': \'%s\', \'created_at\': \'%s\'})' % (callback_name, tweet['text'], tweet['source'], tweet['created_at'])
+		if tweet is not None:
+			tweet_json = '%s({\'text\': \'%s\', \'client\': \'%s\', \'created_at\': \'%s\'})' % (callback_name, tweet['text'], tweet['source'], tweet['created_at'])
 
 		self.response.headers['Content-Type'] = 'application/json'
 		self.response.out.write(tweet_json)
@@ -59,7 +74,7 @@ class LastTweet(webapp.RequestHandler):
 		
 	def get_tweet(self, callback_name):
 		token_url = 'https://api.twitter.com/oauth2/token'
-		last_twitts = 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=nossal&count=2'
+		last_twitts = 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=nossal&count=10'
 		
 		q = db.GqlQuery("SELECT * FROM OauthCredentials WHERE service = :1", 'twitter')
 		if q.count() > 0:
@@ -77,6 +92,7 @@ class LastTweet(webapp.RequestHandler):
 		data = opener.open(request).read()
 		opener.close()
 
+
 		token = json.loads(data)
 	
 		request = urllib2.Request(last_twitts)
@@ -90,7 +106,30 @@ class LastTweet(webapp.RequestHandler):
 		return tweets[0]
 
 
+class MyUrls(webapp.RequestHandler):
+	def get(self):
+		self.response.out.write(template('url').render())
+
+
+class UrlShort(webapp.RequestHandler):
+	def get(self, url):
+		info = {
+			'referer': self.request.referer,
+			'ip_address': self.request.remote_addr,
+			'user_agent': self.request.headers['user-agent']
+		}
+		code = short.set_url(url, info)
+
+		domain = 'noss.al'
+		response = '{url: http://%s/%s}' % (domain, code)
+
+		self.response.headers['Content-Type'] = 'application/json'
+		self.response.out.write(response)
+
+
 app = webapp.WSGIApplication([
+	('/myurls', MyUrls),
+	('/api/url/(.+)', UrlShort),
 	('/api/mylasttweet', LastTweet),
 	('/', MainHandler),
 	('/(.+)', StaticHandler)

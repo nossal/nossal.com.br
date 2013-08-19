@@ -74,6 +74,14 @@ var header = document.getElementsByTagName('header')[0];
 var marginTop = getComputedUnit(h1, 'marginTop');
 var nextToHeader = header.nextElementSibling;
 var start = document.querySelectorAll('a.start')[0];
+var who = document.getElementById('who');
+
+var sections = document.getElementsByTagName('section');
+var pages = [];
+for (var key in sections) {
+	var section = sections[key];
+	pages[section.offsetTop] = section.id;
+}
 
 window.onresize = function() {
 	if (h1.className === 'active')
@@ -97,7 +105,11 @@ function absHeight(element) {
 
 function onScroll(event) {
 	var top = (doc && doc.scrollTop || body && body.scrollTop || 0);
-	
+
+	console.info(top);
+	if (top in pages)
+		console.info('page '+ top);
+
 	if (top.scrollY > marginTop || top > marginTop) {
 		if (h1.className === 'active')
 			return;
@@ -119,6 +131,10 @@ function onScroll(event) {
 		
 		window.onresize();
 	}
+	
+
+
+	
 }
 
 
@@ -144,7 +160,7 @@ function scrollToElement(element) {
 
 start.onclick = function (e) {
 	e.preventDefault();
-	scrollToElement(nextToHeader.nextElementSibling);
+	scrollToElement(who);
 };
 
 
@@ -303,7 +319,7 @@ var JSONP = {
 		tweet.date = new Date(tweet.created_at).toLocaleString();
 		//tweet.text = 'asd sd asdasda sdas dasdasdas adsdas asd sdasd asd asdasd asdasd asda sdasdasdasd asd asdas das asasd sadsdasd asdas das adasda asd asdasda';
 
-		template = '<div class="ico"> \
+		template = '<div class="bird"> \
 						<span class="symbol">twitterbird</span> \
 					</div> \
 					<div class="text"> \

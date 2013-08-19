@@ -1,36 +1,9 @@
-//@import "reset.less";
 @import "normalize.less";
 
 @font-face {font-family: 'Museo-700'; src: url('/static/webfonts/249F14_0_0.eot'); src: url('/static/webfonts/249F14_0_0.eot?#iefix') format('embedded-opentype'), url('/static/webfonts/249F14_0_0.woff') format('font/woff'), url('/static/webfonts/249F14_0_0.ttf') format('truetype');} 
 @font-face {font-family: 'Museo-300'; src: url('/static/webfonts/249F14_1_0.eot'); src: url('/static/webfonts/249F14_1_0.eot?#iefix') format('embedded-opentype'), url('/static/webfonts/249F14_1_0.woff') format('font/woff'), url('/static/webfonts/249F14_1_0.ttf') format('truetype');}
 @font-face {font-family: 'Museo-500'; src: url('/static/webfonts/249F14_2_0.eot'); src: url('/static/webfonts/249F14_2_0.eot?#iefix') format('embedded-opentype'), url('/static/webfonts/249F14_2_0.woff') format('font/woff'), url('/static/webfonts/249F14_2_0.ttf') format('truetype');}
 
-// Font Stacks
-#font {
-	.shorthand(@weight: normal, @size: 14px, @lineHeight: 20px) {
-		font-size: @size;
-		font-weight: @weight;
-		line-height: @lineHeight;
-	}
-	.sans-serif(@weight: normal, @size: 14px, @lineHeight: 20px) {
-		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-		font-size: @size;
-		font-weight: @weight;
-		line-height: @lineHeight;
-	}
-	.serif(@weight: normal, @size: 14px, @lineHeight: 20px) {
-		font-family: "Georgia", Times New Roman, Times, sans-serif;
-		font-size: @size;
-		font-weight: @weight;
-		line-height: @lineHeight;
-	}
-	.monospace(@weight: normal, @size: 12px, @lineHeight: 20px) {
-		font-family: "Monaco", Courier New, monospace;
-		font-size: @size;
-		font-weight: @weight;
-		line-height: @lineHeight;
-	}
-}
 
 // Box sizing
 .box-sizing(@box-model) {
@@ -69,7 +42,7 @@
 }
 
 .text-shadow(@h, @v, @r, @color) {
-	text-shadow: @h+'px' @v+'px' @r+'px' @color;
+	text-shadow: @h @v @r @color;
 	filter: dropshadow(color=@color, offx=@h, offy=@v);
 }
 
