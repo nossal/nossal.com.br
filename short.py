@@ -3,6 +3,7 @@ import base62
 import urllib
 import unicodedata
 from google.appengine.ext import db
+from google.appengine.api import memcache
 
 
 class Url(db.Model):
@@ -18,7 +19,7 @@ class UrlHits(db.Model):
 	user_agent = db.StringProperty()
 
 
-def set_url(url_string, info):
+def set_url(url_string, request):
 	encoded = urllib.quote_plus(urllib.unquote(url_string))
 
 	url = Url.all().filter('url =', encoded).get()
@@ -36,32 +37,46 @@ def set_url(url_string, info):
 		url.url = encoded
 		url.put()
 
-		__hit(url, info)
-	
-	return base62.encode(new_id_num)
+	__hit(url, request)
+
+	code = base62.encode(new_id_num)
+
+	if memcache.get('cacheurls:%s' % code) is None:
+		memcache.add('cacheurls:%s' % code, url, 60*60*12)
+
+	return code
 
 
-def __hit(url, info):
+def __hit(url, request):
 	hit = UrlHits(url_ref = url)
 
-	if info is not None:
-		hit.referer = info['referer']
-		hit.ip_address = info['ip_address']
-		hit.user_agent = info['user_agent']
+	if request is not None:
+		hit.referer = request.referer
+		hit.ip_address = request.remote_addr
+		hit.user_agent = request.headers['user-agent']
 
 	hit.put()
 
 
-def get_url(url_code, info):
-	url_id = base62.decode(url_code)
-	url = Url.get_by_id(url_id)
+def get_url(url_code, request):
+	url = memcache.get('cacheurls:%s' % url_code)
+	if url is None:
+		url_id = base62.decode(url_code)
+		url = Url.get_by_id(url_id)
 	
+	if url is None:
+		return None
 	'''
 	hit = UrlHits.all().filter('url_ref =', url.key()).get()
 	if hit is not None:
 		hit.hits += 1
 		hit.put()
 	'''
-	__hit(url, info)
+	__hit(url, request)
 	
-	return unicodedata.normalize('NFKD', urllib.unquote(url.url)).encode('ascii','ignore')
+	try:
+		url_str = unicodedata.normalize('NFKD', urllib.unquote(url.url)).encode('ascii','ignore')
+	except Exception:
+		url_str = urllib.unquote(url.url)
+
+	return url_str

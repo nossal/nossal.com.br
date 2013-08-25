@@ -6,8 +6,8 @@
 </header>
 
 <section id="me">
-	<p>Olá, meu nome é Rodrigo, mas todos me chamam pelo meu sobrenome: Nossal. <br>E aqui na Internet você também pode me encontrar em: <span id="widget"><a href="#" target="blank">http://<span class="mask"></span>/nossal</a></span></p>
-	
+	<p>Olá, meu nome é Rodrigo, mas todos me chamam pelo meu sobrenome: Nossal. <!--<br>E aqui na Internet você também pode me encontrar em: <span id="widget"><a href="#" target="blank">http://<span class="mask"></span>/nossal</a></span></p>
+	-->
 	<div id="tweetwidget"></div>
 
 	<a href='#' class="start">
@@ -21,11 +21,11 @@
 </section>
 <div class="divisor"></div>
 <section id="who">
-	<h2>Who I Am</h2>
+	<h2>Quem sou eu?</h2>
 	<p>Sou desenvolvedor de software da região de Porto Alegre. <br>Desde 2010 trabalho no <a href="//terra.com.br" class="orangeco" target="blank">Terra Networks</a>. Lá eu programo em Java (Struts, Spring), Python (Django, Flask) e JavaScript (jQuery, Backbone, Node, etc.), mas em outros tempos, já trabalhei com PHP e até PL/SQL. Sim, meu foco agora é o desenvolvimento Web, por isso me dou muito bem com aspectos que vão desde a instalação e configuração de servidores ao HTML e CSS das páginas. Além disso ando muito empolgado com Objective-C e desenvolvimento Mobile.</p>
-	<p>Claro que não é só minha profissão que me define</p>
-</section>
 
+</section>
+<!-- 
 <section id="social">
 	<h2>Nas Redes Sociais</h2>
 	<ul>
@@ -45,9 +45,8 @@
 		<li><a href="https://coderwall.com/nossal" class="symbol" title="coderwall">C</a></li>
 	</ul>
 	<a href="http://dinher.in">Dinherin</a>
-
 </section>
-
+-->
 <section id="photos">
 	<h2>Minhas 	Fotos</h2>
 	<div id="instaphotos" class="gallery"></div>
@@ -56,10 +55,22 @@
 <section id="resume">
 	
 </section>
+<!--
 <section id="greatref">
 	<h2>Grande referência das coisas que já usei e ainda uso</h2>
-	
 </section>
+-->
+
+<section id="shorturl">
+	<form name="shortter">
+		<label for="url">url</label>
+		<div class="joined">
+			<input type="text" name="url" autocomplete="off">
+			<input type="submit" value="Short Me">
+		</div>
+	</form>
+</section>
+
 <section id="contact">
 	<h2>Contato</h2>
 	<form>

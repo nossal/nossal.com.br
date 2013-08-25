@@ -1,5 +1,6 @@
 var language = window.navigator.userLanguage || window.navigator.language;
 var lang = language.split('-')[0];
+var urlPattern = /(http|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/;
 
 function bounce(progress) {
 	for(var a = 0, b = 1, result; 1; a += b, b /= 2) {
@@ -94,7 +95,7 @@ window.onresize = function() {
 	h1.style.left = to + 'px';
 	//move(h1, bounceEaseOut, to, 300);
 	
-	nextToHeader.style.height = window.innerHeight - absHeight(h1)*1.5 + 'px';
+	nextToHeader.style.height = window.innerHeight - absHeight(h1)*1.8 + 'px';
 	nextToHeader.style.marginTop = absHeight(h1) + 'px';
 }
 window.onresize();
@@ -106,7 +107,7 @@ function absHeight(element) {
 function onScroll(event) {
 	var top = (doc && doc.scrollTop || body && body.scrollTop || 0);
 
-	console.info(top);
+
 	if (top in pages)
 		console.info('page '+ top);
 
@@ -131,17 +132,13 @@ function onScroll(event) {
 		
 		window.onresize();
 	}
-	
-
-
-	
 }
 
 
 function scrollToElement(element) {
-	var to = element.offsetTop - 55;
+	var to = element.offsetTop - 75;
 	var start = new Date;
- 	console.info(to)
+
 	var id = setInterval(function() {
 		var timePassed = new Date - start;
 		var progress = timePassed*3 / to;
@@ -163,6 +160,25 @@ start.onclick = function (e) {
 	scrollToElement(who);
 };
 
+
+var shortter = document.forms['shortter'];
+shortter.addEventListener('submit', function(e) {
+	e.preventDefault();
+	var self = this;
+	var url = this.url.value;
+	
+	if (!url.match(/^(http:\/\/|https:\/\/)/))
+		url = 'http://'+ url;
+	
+	if (url.match(urlPattern)) {
+	
+		url = encodeURIComponent(url);
+	
+		JSONP.get('/api/url/'+ url, {}, function(response) {
+			self.url.value = response.url;
+		});
+	}
+});
 
 /*
 var opts = document.querySelectorAll('ul.options li');
@@ -315,17 +331,19 @@ var JSONP = {
 
 (function() {
 	JSONP.get('/api/mylasttweet', [], function(tweet) {
-
 		tweet.date = new Date(tweet.created_at).toLocaleString();
-		//tweet.text = 'asd sd asdasda sdas dasdasdas adsdas asd sdasd asd asdasd asdasd asda sdasdasdasd asd asdas das asasd sadsdasd asdas das adasda asd asdasda';
 
+		var u = urlPattern.exec(tweet.text);
+		if (u) {
+			tweet.text = tweet.text.replace(u[0], '<a href="{{0}}" target="blank">{{0}}</a>'.compile(u));
+		}
+		
 		template = '<div class="bird"> \
 						<span class="symbol">twitterbird</span> \
 					</div> \
 					<div class="text"> \
-						<a href="//twitter.com/nossal"> \
-							<span>@nossal</span><p id="tweettext">{{text}}</p> \
-						</a> \
+						<a href="//twitter.com/nossal"><span>@nossal</span></a> \
+						<p id="tweettext">{{text}}</p> \
 					</div> \
 					<div class="status"><span>{{client}}</span><span>{{date}}</span></div>';
 		

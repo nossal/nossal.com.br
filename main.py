@@ -36,13 +36,7 @@ class StaticHandler(webapp.RequestHandler):
 		try:
 			tpl = template(file)
 		except:
-			info = {
-				'referer': self.request.referer,
-				'ip_address': self.request.remote_addr,
-				'user_agent': self.request.headers['user-agent']
-			}
-			url = short.get_url(file, info)
-			
+			url = short.get_url(file, self.request)
 			if url is not None:
 				self.redirect(url)
 				return
@@ -61,18 +55,19 @@ class LastTweet(webapp.RequestHandler):
 		tweet = memcache.get('cache:tweet')
 
 		if tweet is None:
-			tweet = self.get_tweet(callback_name)
+			tweet = self.get_tweet()
 			if tweet is not None:
 				memcache.add('cache:tweet', tweet, 60*60*12)
 
+		tweet['entities']['urls']
 		if tweet is not None:
-			tweet_json = '%s({\'text\': \'%s\', \'client\': \'%s\', \'created_at\': \'%s\'})' % (callback_name, tweet['text'], tweet['source'], tweet['created_at'])
+			tweet_json = '%s({\'text\': \'%s\', \'client\': \'%s\', \'created_at\': \'%s\', \'urls\': %s})' % (callback_name, tweet['text'], tweet['source'], tweet['created_at'], '[\'urls\']')
 
 		self.response.headers['Content-Type'] = 'application/json'
 		self.response.out.write(tweet_json)
 
 		
-	def get_tweet(self, callback_name):
+	def get_tweet(self):
 		token_url = 'https://api.twitter.com/oauth2/token'
 		last_twitts = 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=nossal&count=10'
 		
@@ -113,15 +108,18 @@ class MyUrls(webapp.RequestHandler):
 
 class UrlShort(webapp.RequestHandler):
 	def get(self, url):
-		info = {
-			'referer': self.request.referer,
-			'ip_address': self.request.remote_addr,
-			'user_agent': self.request.headers['user-agent']
-		}
-		code = short.set_url(url, info)
+		callback_name = self.request.get("callback")
+		
+		if not callback_name:
+			self.error(400)
+			#self.response.out.write(template('not_found').render({'page': url}))
+			return
+
+
+		code = short.set_url(url, self.request)
 
 		domain = 'noss.al'
-		response = '{url: http://%s/%s}' % (domain, code)
+		response = '%s({url: \'http://%s/%s\'})' % (callback_name, domain, code)
 
 		self.response.headers['Content-Type'] = 'application/json'
 		self.response.out.write(response)
