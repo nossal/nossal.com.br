@@ -28,8 +28,7 @@
 	-moz-font-smoothing: antialiased;
 	-ms-font-smoothing: antialiased;
 	-o-font-smoothing: antialiased;
-	font-smoothing: antialiased;
-	
+	font-smoothing: antialiased;	
 }
 
 
@@ -67,8 +66,12 @@ a {
 header {
 	z-index: 10000;
 	font-family: Raleway;
-	background-color: #e6e6e6;
+	background-color: rgba(230, 230, 230, 0.8);
 	width: 100%;
+	overflow: hidden;
+	
+
+	
 	//position: relative;
 	
 	&.fixed {
@@ -76,9 +79,22 @@ header {
 		padding: 0.3em;
 		position: fixed;
 		top: 0;
+		
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0; 
+			left: 0; 
+			right: 0; 
+			bottom: 0;
+			background: inherit;
+			//-webkit-filter: blur(10px) ~"saturate(2)";
+			-webkit-filter : url(#svgBlur);
+		}
 	}
 
 	h1 {
+		left: 33%;
 		white-space: nowrap;
 		position: absolute;
 		.transition(font-size 0.15s linear);
@@ -105,12 +121,20 @@ section {
 	margin: 1em;
 	
 	h2 {
+		text-transform: uppercase;
+		font-weight: 100;
 		text-align: center;
+	}
+	
+	&#photos {
+		padding: 0;
 	}
 	
 	&#me {
 		line-height: 1.7em;
 		text-align: center;
+		margin-top: 150px;
+		height: 800px;
 	}
 	&#who {
 		background-color: #EFEFEF;
@@ -118,6 +142,19 @@ section {
 			text-align:justify;
 			font-size: 1.4em;
 			line-height: 1.4em;
+		}
+	}
+	
+	&#facebook {
+		overflow: hidden;
+		height: 225px;
+		padding: 0;
+
+		li {
+			float: left;
+			display: block;
+			margin: 0;
+			height: 75px;
 		}
 	}
 	
@@ -143,13 +180,19 @@ section {
 		}
 	}
 	
-	&#shorturl {
-		background-color: #C44032;
+	&#urlshortener {
+		background-color: #ccc;
 
+		form {
+			width: 600px;
+			margin: auto;
+		}
+		/*
 		div.joined {
 			font-size: 0px;
 			white-space: nowrap;
 			display: inline-block;
+			width: 100%
 		}
 
 		input {
@@ -163,7 +206,7 @@ section {
 		}
 		
 		input[type=text] {
-			width: 400px;
+			//width: 90%;
 			border: 1px solid darken(#ececec, 25);
 			padding-left: 0.5em;
 			
@@ -172,11 +215,15 @@ section {
 		input[type=submit] {
 			margin-left: -1px;
 			.border-radius(0 3px 3px 0);
+			letter-spacing: 0;
+			font-family: Raleway;
+			font-weight: 800;
 		}
+		*/
 	}
 	
 	&#contact {
-		background-color: #375E99;//#395c9e;
+		background-color: #3F89EF; //#1F8DD6; //#375E99;//#395c9e;
 		color: #fff;
 		
 		form {
@@ -185,31 +232,52 @@ section {
 			margin: auto;
 			display: table;
 			
-			h2 {
-				text-transform: uppercase;
-			}
-			
-			input[type=text], input[type=email], textarea {
-				display: block;
-				margin: 0.2em;
-				padding: 0.1em;
-				padding-left: 0.5em;
-				width: 15em;
-				font-size: 1.4em;
-				border-radius: 3px;
-				
-				border: 1px solid #1C2D49;
-				background: #fff;//#2A4773;
-				color: #92ADD8;
 
-				.box-shadow(inset 0px 0px 5px rgba(0, 0, 0, 0.2));
-			}
 			input[type=submit] {
-				margin-right: 0.4em;
+				//font-size: 14px;
+				margin-right: 9px;
 				float: right;
+				//letter-spacing: 0;
+				font-family: Raleway;
+				//font-weight: 800;
 			}
 		}
 	}	
+}
+
+input[type=text], input[type=email], textarea {
+	display: block;
+	margin: 0.2em;
+	padding: 0.1em;
+	padding-left: 0.5em;
+	width: 15em;
+	font-size: 1.4em;
+	line-height: 1.6em;
+	border-radius: 4px;
+	
+	border: 4px solid #387ad5;
+	background: #fff;//#2A4773;
+	color: #92ADD8;
+
+	.box-shadow(0px 0px 15px rgba(0, 0, 0, 0.15));
+}
+
+button, input[type=submit] {
+	line-height: 1.8em;
+	font-size: 1em;
+	letter-spacing: 0.04em;
+	font-weight: 100;
+	background-color: #ddd;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	padding: 0 15px 0 15px;
+	
+	color: #444;
+	.text-shadow(1px, 1px, 5px, #ddd);
+	
+	#gradient.vertical(#ddd, #ccc);
+	
+	.box-shadow(0px 0px 15px rgba(0, 0, 0, 0.15));
 }
 
 .divisor {
@@ -229,19 +297,21 @@ section {
 	margin: auto;
 	margin-top: 3em;
 	text-align: left;
-//	border: 1px solid #ccc;
 	font-size: 0.9em;
 	line-height: 1.1em;
-	padding: 0.8em;
-	width: 400px;
+	width: 100%;
 
 	>div {
 		float: left;
 	}
 	.text {
-		width: 360px;
+		clear: both;
+		#tweettext {
+			margin-top: 0;
+		}
 	}
 	.bird {
+		float: left;
 		width: 3.2em;
 		margin-left: -0.8em;
 		margin-top: 0.3em;
@@ -252,7 +322,11 @@ section {
 			font-size: 4em;
 		}
 	}
-	
+	.link {
+		display: block;
+		float: left;
+		margin-top: 0.7em;
+	}
 	.status {
 		width: 100%;
 		text-align: right;
@@ -306,7 +380,7 @@ section {
 }
 
 footer {
-    font-family: 'PT Sans Narrow','Arial Narrow',Arial,sans-serif;
+    font-family: 'PT Sans Narrow', 'Arial Narrow', Arial, sans-serif;
     letter-spacing: 0.025em;
     margin: 0;
     text-transform: uppercase;
@@ -328,9 +402,12 @@ footer {
 
 a.start {
 	position: fixed;
+	display: block;
 	bottom: 0.4em;
-	left: 47%;
-	width: 5%;
+	left: 50%;
+	width: 60px;
+	margin-left: -30px;
+	
 	line {
 		stroke: #999;
 	}

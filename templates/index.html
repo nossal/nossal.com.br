@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
+<filter id="svgBlur"><feGaussianBlur stdDeviation="10"/></filter>
+
 <header itemscope itemtype="http://data-vocabulary.org/Person">
 	<span class="name"><h1 itemprop="name">Rodrigo Nossal</h1></span>
 	<!--<p itemprop="title">Software Developer</p> -->
 </header>
 
 <section id="me">
-	<p>Olá, meu nome é Rodrigo, mas todos me chamam pelo meu sobrenome: Nossal. <!--<br>E aqui na Internet você também pode me encontrar em: <span id="widget"><a href="#" target="blank">http://<span class="mask"></span>/nossal</a></span></p>
+	<!--<p>Olá, meu nome é Rodrigo, mas todos me chamam pelo meu sobrenome: Nossal. <br>E aqui na Internet você também pode me encontrar em: <span id="widget"><a href="#" target="blank">http://<span class="mask"></span>/nossal</a></span></p>
 	-->
 	<div id="tweetwidget"></div>
 
@@ -19,12 +21,16 @@
 		</svg>
 	</a>
 </section>
-<div class="divisor"></div>
+<div class="divisor"></div><!--
 <section id="who">
-	<h2>Quem sou eu?</h2>
-	<p>Sou desenvolvedor de software da região de Porto Alegre. <br>Desde 2010 trabalho no <a href="//terra.com.br" class="orangeco" target="blank">Terra Networks</a>. Lá eu programo em Java (Struts, Spring), Python (Django, Flask) e JavaScript (jQuery, Backbone, Node, etc.), mas em outros tempos, já trabalhei com PHP e até PL/SQL. Sim, meu foco agora é o desenvolvimento Web, por isso me dou muito bem com aspectos que vão desde a instalação e configuração de servidores ao HTML e CSS das páginas. Além disso ando muito empolgado com Objective-C e desenvolvimento Mobile.</p>
+	
+	<h2>Eu:</h2>
+	<p>Sou desenvolvedor de software da região de Porto Alegre. <br>Desde 2010 trabalho no <a href="//terra.com.br" class="orangeco" target="blank">Terra Networks</a>. Lá eu programo em Java (Struts, Spring), Python (Django, Flask) e JavaScript (jQuery, Backbone, Node, etc.), mas em outros tempos já trabalhei com PHP e até PL/SQL. Meu foco agora é o desenvolvimento Web, por isso me dou muito bem com aspectos que vão desde a instalação e configuração de servidores, ao HTML e CSS das páginas. Além disso ando muito empolgado com Objective-C e desenvolvimento Mobile.</p>
 
 </section>
+ -->
+<section id="facebook"> </section>
+
 <!-- 
 <section id="social">
 	<h2>Nas Redes Sociais</h2>
@@ -52,30 +58,30 @@
 	<div id="instaphotos" class="gallery"></div>
 	<div id="flickrphotos" class="gallery"></div>
 </section>
+
+<!--
 <section id="resume">
 	
 </section>
-<!--
 <section id="greatref">
 	<h2>Grande referência das coisas que já usei e ainda uso</h2>
 </section>
 -->
 
-<section id="shorturl">
-	<form name="shortter">
-		<label for="url">url</label>
+<section id="urlshortener" style="display: none">
+	<h2>Meu Encurtador de URLs</h2>
+	<form name="shortener">
 		<div class="joined">
-			<input type="text" name="url" autocomplete="off">
-			<input type="submit" value="Short Me">
+			<input type="text" name="url" autocomplete="off" placeholder="Cole aqui a sua URL.">
+			<input type="submit" value="Short It">
 		</div>
 	</form>
 </section>
 
 <section id="contact">
-	<h2>Contato</h2>
-	<form>
+	<form method="POST">
 		<h2>Vamos conversar!</h2>
-		<input type="email" name="email" />
+		<input type="email" name="email" placeHolder="seu@email.com"/>
 		<textarea name="message" rows="5"></textarea>
 		<input type="submit" value="Enviar Mensagem" />
 	</form>

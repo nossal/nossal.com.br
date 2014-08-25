@@ -5,6 +5,14 @@
 @font-face {font-family: 'Museo-500'; src: url('/static/webfonts/249F14_2_0.eot'); src: url('/static/webfonts/249F14_2_0.eot?#iefix') format('embedded-opentype'), url('/static/webfonts/249F14_2_0.woff') format('font/woff'), url('/static/webfonts/249F14_2_0.ttf') format('truetype');}
 
 
+.saturate(@pct) {
+    filter: ~"saturate(@{pct})";
+    -webkit-filter: ~"saturate(@{pct})";
+    -moz-filter: ~"saturate(@{pct})";
+    -o-filter: ~"saturate(@{pct})";
+    -ms-filter: ~"saturate(@{pct})";
+}
+
 // Box sizing
 .box-sizing(@box-model) {
   -webkit-box-sizing: @box-model; // Safari <= 5
